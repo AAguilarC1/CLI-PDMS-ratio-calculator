@@ -1,0 +1,25 @@
+[project]
+name = "pdms-ratio"
+version = "1.0.0"
+description = "A simple python package to calculate the ratio of mix for PDMS."
+readme = "README.md"
+authors = [
+    { name = "Abel A", email = "a.guilarchavez1@universityofgalway.ie" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.24.1",
+]
+
+[project.scripts]
+pdms-ratio = "pdms_ratio.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.10.8,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "black>=26.3.0",
+    "pytest>=9.0.2",
+]
