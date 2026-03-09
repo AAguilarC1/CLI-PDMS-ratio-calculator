@@ -1,6 +1,6 @@
 [project]
 name = "pdms-ratio"
-version = "1.0.0"
+version = "1.1.0"
 description = "A simple python package to calculate the ratio of mix for PDMS."
 readme = "README.md"
 authors = [

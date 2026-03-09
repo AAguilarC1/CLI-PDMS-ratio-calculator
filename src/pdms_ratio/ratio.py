@@ -1,45 +1,56 @@
 from dataclasses import dataclass
 from typing import NamedTuple
+from enum import StrEnum
 
 Ratio = NamedTuple("Ratio", [("A", float), ("B", float)])
 
+class MassOrVolume(StrEnum):
+    MASS = "MASS"
+    VOLUME = "VOLUME"
 
 @dataclass
 class PDMSRatioCalculator:
-    __weight_of_pdms_g: float = 10.0
-    __weight_of_A_g: float = 0.0
-    __weight_of_B_g: float = 0.0
+    __mass_or_volume: MassOrVolume = MassOrVolume.MASS
+    __amount_of_pdms_unit: float = 10.0
+    __amount_of_A_unit: float = 0.0
+    __amount_of_B_unit: float = 0.0
     __ratio: Ratio = Ratio(10, 1)
 
     def __init__(
         self,
-        weight_of_pdms_g: float = 10.0,
+        amount_of_pdms_unit: float = 10.0,
         A_ratio: float = 10.0,
         B_ratio: float = 1.0,
+        mass_or_volume: str = "MASS",
     ):
         ratio: Ratio = Ratio(A_ratio, B_ratio)
-        self.__weight_of_pdms_g = weight_of_pdms_g
+        self.__amount_of_pdms_unit = amount_of_pdms_unit
         self.__ratio = ratio
+        self.__mass_or_volume = MassOrVolume(mass_or_volume)
         self.__post_init__()
 
     def __post_init__(self):
-        self.__weight_of_A_g, self.__weight_of_B_g = self.calculate_weight(
-            self.__weight_of_pdms_g, self.__ratio
+        self.__amount_of_A_unit, self.__amount_of_B_unit = self.calculate_ratio(
+            self.__amount_of_pdms_unit, self.__ratio
         )
+        
+        units : str = "g" if self.__mass_or_volume == MassOrVolume.MASS else "mL"
 
         print(
-            f"For a weight of {self.__weight_of_pdms_g} g of PDMS with a ratio of {self.__ratio.A:.2f}:{self.__ratio.B:.2f} the weights of A and B are:"
+            f"For a {self.__mass_or_volume.value} of {self.__amount_of_pdms_unit} {units} of PDMS with a ratio of {self.__ratio.A:.2f}:{self.__ratio.B:.2f} the amounts of A and B are:"
         )
 
     @staticmethod
-    def calculate_weight(total_weight: float, ratio: Ratio) -> tuple[float, float]:
+    def calculate_ratio(total_amount: float, ratio: Ratio) -> tuple[float, float]:
         divisor: float = 1 / (ratio.A + ratio.B)
 
-        weight_of_A_g: float = total_weight * ratio.A * divisor
-        weight_of_B_g: float = total_weight * ratio.B * divisor
+        amount_of_A: float = total_amount * ratio.A * divisor
+        amount_of_B: float = total_amount * ratio.B * divisor
 
-        return weight_of_A_g, weight_of_B_g
+        return amount_of_A, amount_of_B
 
-    def print_weights(self):
-        print(f"Weight of A: {self.__weight_of_A_g:.2f} g")
-        print(f"Weight of B: {self.__weight_of_B_g:.2f} g")
+    def print_amounts(self):
+        unit: str = "g" if self.__mass_or_volume == MassOrVolume.MASS else "mL"
+        
+        print(f"Amount of A: {self.__amount_of_A_unit:.2f} {unit}")
+        print(f"Amount of B: {self.__amount_of_B_unit:.2f} {unit}")
