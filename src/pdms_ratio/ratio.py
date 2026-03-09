@@ -4,17 +4,20 @@ from enum import StrEnum
 
 Ratio = NamedTuple("Ratio", [("A", float), ("B", float)])
 
+
 class MassOrVolume(StrEnum):
     MASS = "MASS"
     VOLUME = "VOLUME"
 
+
 @dataclass
 class PDMSRatioCalculator:
     __mass_or_volume: MassOrVolume = MassOrVolume.MASS
+    __ratio: Ratio = Ratio(10, 1)
+
     __amount_of_pdms_unit: float = 10.0
     __amount_of_A_unit: float = 0.0
     __amount_of_B_unit: float = 0.0
-    __ratio: Ratio = Ratio(10, 1)
 
     def __init__(
         self,
@@ -33,12 +36,6 @@ class PDMSRatioCalculator:
         self.__amount_of_A_unit, self.__amount_of_B_unit = self.calculate_ratio(
             self.__amount_of_pdms_unit, self.__ratio
         )
-        
-        units : str = "g" if self.__mass_or_volume == MassOrVolume.MASS else "mL"
-
-        print(
-            f"For a {self.__mass_or_volume.value} of {self.__amount_of_pdms_unit} {units} of PDMS with a ratio of {self.__ratio.A:.2f}:{self.__ratio.B:.2f} the amounts of A and B are:"
-        )
 
     @staticmethod
     def calculate_ratio(total_amount: float, ratio: Ratio) -> tuple[float, float]:
@@ -51,6 +48,10 @@ class PDMSRatioCalculator:
 
     def print_amounts(self):
         unit: str = "g" if self.__mass_or_volume == MassOrVolume.MASS else "mL"
-        
+
+        print(
+            f"For a {self.__mass_or_volume.value} of {self.__amount_of_pdms_unit} {unit} of PDMS with a ratio of {self.__ratio.A:.2f}:{self.__ratio.B:.2f} the amounts of A and B are:"
+        )
+
         print(f"Amount of A: {self.__amount_of_A_unit:.2f} {unit}")
         print(f"Amount of B: {self.__amount_of_B_unit:.2f} {unit}")
